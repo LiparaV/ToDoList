@@ -1,35 +1,25 @@
-import React from 'react';
-import { Component } from 'react';
-import SignInForm from './components/SignInForm';
-// import AlohaDashboard from './components/AlohaDashboard';
-import StopWatch from './components/StopWatch';
+import React from "react";
+import { Component } from "react";
+import { BrowserRouter } from "react-router-dom";
+import styles from './styles.module.scss'
+import { useState } from "react";
+import ToDoList from "Components/ToDoList";
 
-class App extends Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      isVisible: true,
-    };
-  }
-
-  toggleVisibility = () => {
-    this.setState({
-      isVisible : !this.state.isVisible
-    })
-  }
-
-  render() {
-    const { isVisible } = this.state;
-
+function App(props){
+ 
     return (
-      <>
-        <button onClick={this.toggleVisibility}>Toggle</button>
-        {isVisible && <StopWatch />}
-        <SignInForm />
-      </>
+       <BrowserRouter>
+       
+<ToDoList />
+
+
+    
+      </BrowserRouter>
     );
-  }
-}
+    }
+
+
+   
 
 export default App;
