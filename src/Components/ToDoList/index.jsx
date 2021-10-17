@@ -2,6 +2,8 @@ import { Form, Field, Formik, ErrorMessage } from "formik";
 import React, { useCallback } from "react";
 import { useState } from "react";
 import { TODO_SCHEMA } from "./Validation";
+import cx from 'classnames'
+import styles from './styles.module.scss'
 const data = [];
 
 const ToDoList = () => {
@@ -24,15 +26,18 @@ const ToDoList = () => {
     return setTasks(filter);
   };
 
-  const [completedTasks, setCompetedTasks] = useState([]);
-  const toggleCompletion = (taskId) => {
-    const newCompletedTaskList = [...completedTasks];
-    if (completedTasks.indexOf(taskId) != -1) {
-    } else {
-      newCompletedTaskList.push(taskId);
-    }
-    setCompetedTasks(newCompletedTaskList);
+  
+  const toggleCompletion = (i) => {
+    const newTasks = tasks.map((task) => {
+      const newTask = {
+        ...task,
+        isDone: task.id === i ? !task.isDone : task.isDone,
+      };
+      return newTask;
+    });
+    setTasks(newTasks);
   };
+
 
   const submitHandler = (values, formikBag) => {
     const { taskText } = values;
@@ -40,10 +45,16 @@ const ToDoList = () => {
     formikBag.resetForm();
   };
 
+   
   return (
     <div>
+      <main className={styles.listWrapper}>
       <h1>To Do List</h1>
-      <Formik validationSchema={TODO_SCHEMA} initialValues={{ taskText: "" }} onSubmit={submitHandler}>
+      <Formik
+        validationSchema={TODO_SCHEMA}
+        initialValues={{ taskText: "" }}
+        onSubmit={submitHandler}
+      >
         <Form>
           <Field name="taskText" placeholder="Enter new task" />
           <ErrorMessage name="taskText">
@@ -53,15 +64,32 @@ const ToDoList = () => {
       </Formik>
       <ul>
         {tasks.map((task) => {
+          const classNames = cx({
+            [styles.done]: task.isDone,
+            [styles.unDone]: !task.isDone,
+          });
           return (
-            <li>
+            <div className={styles.taskWrapper}>
+               <div onClick={() => toggleCompletion(task.id)} >
+               <input 
+                className={styles.checkbox}
+                type="checkbox"
+                checked={task.isDone}
+              />
+              </div>
+            <li className={classNames}>
               {task.body}
-              <button onClick={() => deleteTask(task.id)}> Delete Task</button>
-              <input type="checkbox" />
+              <button className={styles.deleteButton} onClick={() => deleteTask(task.id)}/>
+             
+     
+            
             </li>
+            </div>
           );
         })}
+        
       </ul>
+      </main>
     </div>
   );
 };
