@@ -2,8 +2,9 @@ import { Form, Field, Formik, ErrorMessage } from "formik";
 import React, { useCallback } from "react";
 import { useState } from "react";
 import { TODO_SCHEMA } from "./Validation";
-import cx from 'classnames'
-import styles from './styles.module.scss'
+import cx from "classnames";
+import styles from "./styles.module.scss";
+
 const data = [];
 
 const ToDoList = () => {
@@ -26,7 +27,6 @@ const ToDoList = () => {
     return setTasks(filter);
   };
 
-  
   const toggleCompletion = (i) => {
     const newTasks = tasks.map((task) => {
       const newTask = {
@@ -38,57 +38,59 @@ const ToDoList = () => {
     setTasks(newTasks);
   };
 
-
   const submitHandler = (values, formikBag) => {
     const { taskText } = values;
     addTask(taskText);
     formikBag.resetForm();
   };
 
-   
   return (
     <div>
       <main className={styles.listWrapper}>
-      <h1>To Do List</h1>
-      <Formik
-        validationSchema={TODO_SCHEMA}
-        initialValues={{ taskText: "" }}
-        onSubmit={submitHandler}
-      >
-        <Form>
-          <Field name="taskText" placeholder="Enter new task" />
-          <ErrorMessage name="taskText">
-            {(message) => <div style={{ color: "red" }}>{message}</div>}
-          </ErrorMessage>
-        </Form>
-      </Formik>
-      <ul>
-        {tasks.map((task) => {
-          const classNames = cx({
-            [styles.done]: task.isDone,
-            [styles.unDone]: !task.isDone,
-          });
-          return (
-            <div className={styles.taskWrapper}>
-               <div onClick={() => toggleCompletion(task.id)} >
-               <input 
-                className={styles.checkbox}
-                type="checkbox"
-                checked={task.isDone}
-              />
+        <h1>To Do List</h1>
+        <Formik
+          validationSchema={TODO_SCHEMA}
+          initialValues={{ taskText: "" }}
+          onSubmit={submitHandler}
+        >
+          <Form>
+            <Field name="taskText" placeholder="Enter new task" />
+            <ErrorMessage name="taskText">
+              {(message) => <div style={{ color: "red" }}>{message}</div>}
+            </ErrorMessage>
+          </Form>
+        </Formik>
+        <ul className={styles.ulWrapper}>
+          {tasks.map((task) => {
+            const classNames = cx(styles.liWrapper,{
+              [styles.done]: task.isDone,
+              [styles.unDone]: !task.isDone,
+              
+            });
+            return (
+              <div className={styles.taskWrapper}>
+                
+                <li className={classNames}>
+                <div className={styles.textWrapper}>
+                  <div onClick={() => toggleCompletion(task.id)}>
+                    <input
+                      className={styles.checkbox}
+                      type="checkbox"
+                      checked={task.isDone}
+                    />
+                  </div>
+
+                  <div>{task.body}</div>
               </div>
-            <li className={classNames}>
-              {task.body}
-              <button className={styles.deleteButton} onClick={() => deleteTask(task.id)}/>
-             
-     
-            
-            </li>
-            </div>
-          );
-        })}
-        
-      </ul>
+                  <button
+                    className={styles.deleteButton}
+                    onClick={() => deleteTask(task.id)}
+                  />
+                </li>
+              </div>
+            );
+          })}
+        </ul>
       </main>
     </div>
   );

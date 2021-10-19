@@ -6,7 +6,7 @@ export const TODO_SCHEMA = yup.object({
     .string()
     .matches(
       /^.{3,30}$/,
-      "The field must contain a minimum of 3 characters and a maximum of 50"
+      "Enter 3 to 30 characters"
     )
     .required(""),
 });
